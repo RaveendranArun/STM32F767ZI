@@ -1,0 +1,48 @@
+:name: NUCLEO-F767ZI
+:description: Runs build/final.elf on Renode's Nucleo-144 STM32F767ZI model (USART3 = ST-LINK VCP).
+
+using sysbus
+$name ?= "nucleo_f767zi"
+mach create $name
+
+machine LoadPlatformDescription @platforms/boards/nucleo_f767zi.repl
+
+# Firmware to load; override with: renode -e '$bin=@path/to/app.elf' ...
+$bin ?= $ORIGIN/../../build/final.elf
+
+# USART3 (PD8/PD9) is the ST-LINK virtual COM port on the real board
+showAnalyzer usart3
+
+# Raw serial terminal for USART3 on TCP port 3456: connect with "nc localhost 3456"
+emulation CreateServerSocketTerminal 3456 "term" false
+connector Connect sysbus.usart3 term
+
+# Same port as OpenOCD, so the "Attach to running OpenOCD" launch config works
+machine StartGdbServer 3333
+
+# Log LED changes so button-driven toggles show up in the console
+logLevel 0 sysbus.gpioPortB.BlueLED
+
+# User button B1 (PC13, active low): type "press" / "release" / "click" in the monitor
+macro press
+"""
+    sysbus.gpioPortC.UserButton1 Press
+"""
+macro release
+"""
+    sysbus.gpioPortC.UserButton1 Release
+"""
+macro click
+"""
+    sysbus.gpioPortC.UserButton1 PressAndRelease
+"""
+alias press "runMacro $press"
+alias release "runMacro $release"
+alias click "runMacro $click"
+
+macro reset
+"""
+    sysbus LoadELF $bin
+"""
+
+runMacro $reset

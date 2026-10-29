@@ -1,0 +1,31 @@
+{
+    "configurations": [
+        {
+            "name": "STM32F767 (arm-none-eabi)",
+            "compilerPath": "/opt/homebrew/bin/arm-none-eabi-gcc",
+            "compilerArgs": [
+                "-mcpu=cortex-m7",
+                "-mthumb",
+                "-mfloat-abi=soft"
+            ],
+            "intelliSenseMode": "gcc-arm",
+            "cStandard": "gnu11",
+            "includePath": [
+                "${workspaceFolder}/app/inc",
+                "${workspaceFolder}/drivers/inc",
+                "${workspaceFolder}/ThirdParty/CMSIS/Device/ST/STM32F7xx/Include",
+                "${workspaceFolder}/ThirdParty/CMSIS/Core/Include"
+            ],
+            "defines": [
+                "STM32F767xx"
+            ],
+            "browse": {
+                "path": [
+                    "${workspaceFolder}"
+                ],
+                "limitSymbolsToIncludedHeaders": true
+            }
+        }
+    ],
+    "version": 4
+}

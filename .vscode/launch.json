@@ -1,0 +1,66 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug (OpenOCD)",
+            "type": "cortex-debug",
+            "request": "launch",
+            "servertype": "openocd",
+            "cwd": "${workspaceFolder}",
+            "executable": "${workspaceFolder}/build/final.elf",
+            "armToolchainPath": "/opt/homebrew/bin",
+            "serverpath": "/opt/homebrew/bin/openocd",
+            "configFiles": [
+                "${workspaceFolder}/tools/openocd/stm32f4discovery.cfg"
+            ],
+            "preLaunchTask": "make",
+            "runToEntryPoint": "main"
+        },
+        {
+            "name": "Attach to running OpenOCD (make load)",
+            "type": "cortex-debug",
+            "request": "launch",
+            "servertype": "external",
+            "gdbTarget": "127.0.0.1:3333",
+            "cwd": "${workspaceFolder}",
+            "executable": "${workspaceFolder}/build/final.elf",
+            "armToolchainPath": "/opt/homebrew/bin",
+            "serverpath": "/opt/homebrew/bin/openocd",
+            "preLaunchTask": "make",
+            "overrideLaunchCommands": [
+                "monitor reset halt",
+                "load",
+                "monitor reset halt"
+            ],
+            "runToEntryPoint": "main"
+        },
+        {
+            "name": "Debug semihosting (OpenOCD)",
+            "type": "cortex-debug",
+            "request": "launch",
+            "servertype": "openocd",
+            "cwd": "${workspaceFolder}",
+            "executable": "${workspaceFolder}/build/final_sh.elf",
+            "armToolchainPath": "/opt/homebrew/bin",
+            "serverpath": "/opt/homebrew/bin/openocd",
+            "configFiles": [
+                "${workspaceFolder}/tools/openocd/stm32f4discovery.cfg"
+            ],
+            "preLaunchTask": "make semi",
+            "preLaunchCommands": [
+                "monitor arm semihosting enable"
+            ],
+            "runToEntryPoint": "main"
+        },
+        {
+            "name": "Attach to Renode",
+            "type": "cortex-debug",
+            "request": "attach",
+            "servertype": "external",
+            "gdbTarget": "127.0.0.1:3333",
+            "cwd": "${workspaceFolder}",
+            "executable": "${workspaceFolder}/build/final.elf",
+            "armToolchainPath": "/opt/homebrew/bin"
+        }
+    ]
+}
